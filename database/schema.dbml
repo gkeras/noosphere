@@ -1,0 +1,66 @@
+Table people {
+    id int [pk, increment]
+    name varchar(255) [not null]
+    slug varchar(255) [unique, not null]
+}
+
+Table works{
+    id int [pk, increment]
+    title varchar (255) [not null]
+    original_title varchar(255)
+    first_publication_year int
+    slug varchar(500) [unique, not null]
+}
+
+Table work_authors {
+    work_id int [ref: > works.id]
+    person_id int [ref: > people.id]
+
+    indexes {
+        (work_id, person_id) [pk]
+    }
+}
+
+Table volumes {
+   id int [pk, increment]
+   title varchar(255) [not null]
+   publisher_id int [ref: > publishers.id]
+   edition varchar(100)
+   publication_year int
+   language varchar(50)
+   isbn varchar(20)
+}
+
+Table volume_people {
+    volume_id int [ref: > volumes.id]
+    person_id int [ref: > people.id]
+    role varchar(50)
+    
+    indexes {
+       (volume_id, person_id) [pk] 
+    }
+}
+
+Table volume_works {
+    volume_id int [ref: > volumes.id]
+    work_id int [ref: > works.id]
+
+    indexes {
+        (volume_id, work_id) [pk]
+    }
+}
+
+Table publishers {
+    id int [pk, increment]
+    name varchar(255) [not null]
+    country varchar(100)
+}
+
+Table copies {
+    id int [pk, increment]
+    volume_id int [ref: > volumes.id]
+    medium varchar(20)
+    condition varchar(20)
+    shelf varchar(100)
+    file_path varchar(500)
+}
