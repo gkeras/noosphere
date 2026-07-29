@@ -1,20 +1,48 @@
-Table people {
+Table persons {
     id int [pk, increment]
-    name varchar(255) [not null]
+    name varchar(100) [not null]
     slug varchar(255) [unique, not null]
 }
 
 Table works{
     id int [pk, increment]
-    title varchar (255) [not null]
+    title varchar (100) [not null]
     original_title varchar(255)
     first_publication_year int
-    slug varchar(500) [unique, not null]
+    slug varchar(255) [unique, not null]
+}
+
+Table work_notes{
+    id int [pk, increment]
+    work_id int [ref: > works.id]
+    title varchar(100) [not null]
+    path varchar(512) [not null]
+}
+
+Table person_notes{
+    id int [pk, increment]
+    person_id int [ref: > persons.id]
+    title varchar(100) [not null]
+    path varchar(512) [not null]
+}
+
+Table work_links{
+    id int [pk, increment]
+    work_id int [ref: > works.id]
+    url varchar(512) [not null]
+    label varchar(100)
+}
+
+Table person_links{
+    id int [pk, increment]
+    person_id int [ref: > persons.id]
+    url varchar(512) [not null]
+    label varchar(100)
 }
 
 Table work_authors {
     work_id int [ref: > works.id]
-    person_id int [ref: > people.id]
+    person_id int [ref: > persons.id]
 
     indexes {
         (work_id, person_id) [pk]
@@ -25,20 +53,33 @@ Table volumes {
    id int [pk, increment]
    title varchar(255) [not null]
    publisher_id int [ref: > publishers.id]
+   collection_id int [ref: > collections.id]
+   collection_number int 
    edition varchar(100)
    publication_year int
    language varchar(50)
-   isbn varchar(20)
+   isbn varchar(20) [unique]
 }
 
-Table volume_people {
+Table collections{
+    id int [pk, increment]
+    name varchar(100)
+    publisher_id int [ref: > publishers.id]
+}
+
+Table volume_persons {
     volume_id int [ref: > volumes.id]
-    person_id int [ref: > people.id]
-    role varchar(50)
+    person_id int [ref: > persons.id]
+    role_id int [ref: > roles.id]
     
     indexes {
        (volume_id, person_id) [pk] 
     }
+}
+
+Table roles {
+    id int [pk, increment]
+    name varchar(100) [not null, unique]
 }
 
 Table volume_works {
@@ -52,15 +93,16 @@ Table volume_works {
 
 Table publishers {
     id int [pk, increment]
-    name varchar(255) [not null]
+    name varchar(100) [not null]
     country varchar(100)
 }
 
 Table copies {
     id int [pk, increment]
     volume_id int [ref: > volumes.id]
-    medium varchar(20)
+    format varchar(20)
     condition varchar(20)
     shelf varchar(100)
     file_path varchar(500)
 }
+
