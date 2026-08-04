@@ -300,14 +300,6 @@ Complete archive
 
 ---
 
-## Backend
-
-- FastAPI
-
-Mainly if cloud synchronization is required.
-
----
-
 ## Database
 
 SQLite
