@@ -2,14 +2,25 @@ Table persons {
     id int [pk, increment]
     name varchar(100) [not null]
     slug varchar(255) [unique, not null]
+    created_at timestamp
+    updated_at timestamp
 }
 
 Table works{
     id int [pk, increment]
-    title varchar (100) [not null]
+    title varchar (255) [not null]
     original_title varchar(255)
+    original_language varchar(50)
     first_publication_year int
     slug varchar(255) [unique, not null]
+    created_at timestamp
+    updated_at timestamp
+}
+
+enum note_type {
+  note
+  quote
+  summary
 }
 
 Table work_notes{
@@ -17,6 +28,9 @@ Table work_notes{
     work_id int [ref: > works.id]
     title varchar(100) [not null]
     path varchar(512) [not null]
+    note_type note_type [not null, default: 'note']
+    created_at timestamp
+    updated_at timestamp
 }
 
 Table person_notes{
@@ -24,6 +38,9 @@ Table person_notes{
     person_id int [ref: > persons.id]
     title varchar(100) [not null]
     path varchar(512) [not null]
+    note_type note_type [not null, default: 'note']
+    created_at timestamp
+    updated_at timestamp
 }
 
 Table work_links{
@@ -31,6 +48,8 @@ Table work_links{
     work_id int [ref: > works.id]
     url varchar(512) [not null]
     label varchar(100)
+    created_at timestamp
+    updated_at timestamp
 }
 
 Table person_links{
@@ -38,11 +57,15 @@ Table person_links{
     person_id int [ref: > persons.id]
     url varchar(512) [not null]
     label varchar(100)
+    created_at timestamp
+    updated_at timestamp
 }
 
 Table work_authors {
     work_id int [ref: > works.id]
     person_id int [ref: > persons.id]
+    created_at timestamp
+    updated_at timestamp
 
     indexes {
         (work_id, person_id) [pk]
@@ -59,18 +82,25 @@ Table volumes {
    publication_year int
    language varchar(50)
    isbn varchar(20) [unique]
+   cover_path varchar(512)
+   created_at timestamp
+   updated_at timestamp
 }
 
 Table collections{
     id int [pk, increment]
     name varchar(100)
     publisher_id int [ref: > publishers.id]
+    created_at timestamp
+    updated_at timestamp
 }
 
 Table volume_persons {
     volume_id int [ref: > volumes.id]
     person_id int [ref: > persons.id]
     role_id int [ref: > roles.id]
+    created_at timestamp
+    updated_at timestamp
     
     indexes {
        (volume_id, person_id) [pk] 
@@ -80,11 +110,15 @@ Table volume_persons {
 Table roles {
     id int [pk, increment]
     name varchar(100) [not null, unique]
+    created_at timestamp
+    updated_at timestamp
 }
 
 Table volume_works {
     volume_id int [ref: > volumes.id]
     work_id int [ref: > works.id]
+    created_at timestamp
+    updated_at timestamp
 
     indexes {
         (volume_id, work_id) [pk]
@@ -95,14 +129,39 @@ Table publishers {
     id int [pk, increment]
     name varchar(100) [not null]
     country varchar(100)
+    created_at timestamp
+    updated_at timestamp
+}
+
+enum reading_status {
+    unread
+    currently_reading
+    finished
+}
+
+enum copy_format {
+    physical
+    pdf
+    epub
+}
+
+enum copy_condition {
+    excellent
+    good
+    acceptable
+    bad
 }
 
 Table copies {
     id int [pk, increment]
     volume_id int [ref: > volumes.id]
-    format varchar(20)
-    condition varchar(20)
+    copy_format copy_format 
+    copy_condition copy_condition
     shelf varchar(100)
     file_path varchar(500)
+    file_hash varchar(64)
+    reading_status reading_status [not null, default: 'unread']
+    created_at timestamp
+    updated_at timestamp
 }
 
