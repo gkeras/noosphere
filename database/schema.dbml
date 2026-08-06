@@ -115,13 +115,27 @@ Table roles {
 }
 
 Table volume_works {
+    id int [pk, increment]
     volume_id int [ref: > volumes.id]
     work_id int [ref: > works.id]
     created_at timestamp
     updated_at timestamp
 
     indexes {
-        (volume_id, work_id) [pk]
+        (volume_id, work_id) [unique]
+    }
+}
+
+Table volume_works_persons {
+    id int [pk, increment]
+    volume_work_id int [ref: > volume_works.id]
+    person_id int [ref: > persons.id]
+    role_id int [ref: > roles.id]
+    created_at timestamp
+    updated_at timestamp
+
+    indexes {
+        (volume_work_id, person_id, role_id) [unique]
     }
 }
 
