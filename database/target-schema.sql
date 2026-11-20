@@ -1,3 +1,7 @@
+-- TARGET DESIGN, NOT EXECUTED.
+-- Migrations are the source of truth. Each slice copies only the tables it needs from here.
+-- Reconcile this file with the migrations during replan.
+
 CREATE TABLE people (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
